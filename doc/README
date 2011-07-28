@@ -1,0 +1,21 @@
+These fleet assignment instances come under a json format. As a
+specification of this json format, a small example is provided for each of
+the instance types. Reading these example should probably be enough to
+understand the formats.
+
+In case you are not familiar with json, you should have a look at
+http://json.org/. It is very simple!
+
+As an example, here is how to read a json document in python2:
+
+from __future__ import with_statement
+import json
+with open("my_json_file") as f:
+    instance = json.load(f)
+
+Your instance is now loaded as a dictionary. You can access any of its
+fields easily.
+
+print f["network"]
+
+There are plenty of json libraries in every languages...
