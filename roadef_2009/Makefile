@@ -1,4 +1,6 @@
-all:
+all: IFAM
+
+IFAM:
 	mkdir -p IFAM
 	python ./scripts/to_IFAM.py ./raw/A01_6088570/ > IFAM/A_01_IFAM.json
 	#same as A_01: A_02, A_03, A_04, XA_01
@@ -17,5 +19,16 @@ all:
 	python ./scripts/to_IFAM.py ./raw/X03_DATA/    > IFAM/X_03_IFAM.json
 	#same as X_03: X_04
 
+FAM: IFAM
+	mkdir -p FAM
+	python ./scripts/IFAM_to_FAM.py ./IFAM/A_01_IFAM.json > ./FAM/A_01_FAM.json
+	python ./scripts/IFAM_to_FAM.py ./IFAM/A_05_IFAM.json > ./FAM/A_05_FAM.json
+	python ./scripts/IFAM_to_FAM.py ./IFAM/A_06_IFAM.json > ./FAM/A_06_FAM.json
+	python ./scripts/IFAM_to_FAM.py ./IFAM/A_10_IFAM.json > ./FAM/A_10_FAM.json
+	python ./scripts/IFAM_to_FAM.py ./IFAM/B_01_IFAM.json > ./FAM/B_01_FAM.json
+	python ./scripts/IFAM_to_FAM.py ./IFAM/B_06_IFAM.json > ./FAM/B_06_FAM.json
+	python ./scripts/IFAM_to_FAM.py ./IFAM/X_01_IFAM.json > ./FAM/X_01_FAM.json
+	python ./scripts/IFAM_to_FAM.py ./IFAM/X_03_IFAM.json > ./FAM/X_03_FAM.json
+
 clean:
-	rm -rf IFAM
+	rm -rf IFAM FAM

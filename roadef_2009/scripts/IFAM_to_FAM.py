@@ -31,20 +31,25 @@ def modify(instance):
 
     result["assignmentcost"] = instance["operatingcost"]
     for l in instance["network"].keys():
-        for m in instance["fleet"].keys():
-            # 1) compute D_l
-            itineraries_crossing_l = [
-                    i for i, v in instance["itineraries"].items()
-                    if l in [leg["leg"] for leg in v]
-                    ]
-            D_l = sum([instance["demand"][i] for i in itineraries_crossing_l])
-            # 2) compute C_m
-            C_m = sum(instance["fleet"][m]["capacity"].values())
-            # 3) compute avgfare_l
+        # 1) compute D_l
+        itineraries_crossing_l = [
+                i for i, v in instance["itineraries"].items()
+                if l in [leg["leg"] for leg in v]
+                ]
+        D_l = sum([instance["demand"][i] for i in itineraries_crossing_l])
+        # 2) compute avgfare_l
+        try:
             avgfare_l = sum([instance["fare"][i]*instance["demand"][i]
                 for i in itineraries_crossing_l]) / D_l
-            spillcost_m_l = max(0, D_l - C_m) * avgfare_l * kappa
-            result["assignmentcost"][l][m] += spillcost_m_l
+        except ZeroDivisionError:
+            # No demand on the flight, true in some instances
+            avgfare_l = 0
+        for m in instance["fleet"].keys():
+                # 3) compute C_m
+                C_m = sum(instance["fleet"][m]["capacity"].values())
+                # 4) update the cost
+                spillcost_m_l = max(0, D_l - C_m) * avgfare_l * kappa
+                result["assignmentcost"][l][m] += spillcost_m_l
 
     for m in result["fleet"].keys():
         del result["fleet"][m]["capacity"]
