@@ -19,3 +19,6 @@ fields easily.
 print f["network"]
 
 There are plenty of json libraries in every languages...
+
+For a real life example in python, see ./stats.py, which prints
+information about a given instance.
