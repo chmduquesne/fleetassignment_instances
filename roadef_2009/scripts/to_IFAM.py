@@ -140,14 +140,13 @@ if __name__ == "__main__":
 
     instance = {}
 
-    instance["instance"] = "MDFAM"
+    instance["instance"] = "IFAM"
     instance["network"] = get_network(path)
     instance["cabins"]= ["E", "B", "F"]
     instance["fleet"] = get_fleet(path)
     instance["operatingcost"] = get_operatingcosts(instance)
     instance["itineraries"], instance["fare"], instance["demand"] = \
             get_itineraries_fares_groups_demands(path)
-    instance["correlations"] = {}
 
     clean_hourlyopcosts(instance)
 
