@@ -1,0 +1,160 @@
+{
+    "itineraries": {
+        "1": [
+            {
+                "cabin": "ECO", 
+                "leg": "1"
+            }
+        ], 
+        "3": [
+            {
+                "cabin": "ECO", 
+                "leg": "2"
+            }
+        ], 
+        "2": [
+            {
+                "cabin": "ECO", 
+                "leg": "1"
+            }, 
+            {
+                "cabin": "ECO", 
+                "leg": "4"
+            }
+        ], 
+        "5": [
+            {
+                "cabin": "ECO", 
+                "leg": "3"
+            }
+        ], 
+        "4": [
+            {
+                "cabin": "ECO", 
+                "leg": "2"
+            }, 
+            {
+                "cabin": "ECO", 
+                "leg": "4"
+            }
+        ], 
+        "6": [
+            {
+                "cabin": "ECO", 
+                "leg": "4"
+            }
+        ]
+    }, 
+    "fare": {
+        "1": 100.0, 
+        "3": 112.5, 
+        "2": 137.5, 
+        "5": 112.5, 
+        "4": 150.0, 
+        "6": 137.5
+    }, 
+    "cabins": [
+        "ECO", 
+        "BUS", 
+        "FIR"
+    ], 
+    "network": {
+        "1": {
+            "boardpoint": "POR", 
+            "departuretime": "20090311T040000", 
+            "offpoint": "HEL", 
+            "arrivaltime": "20090311T044000"
+        }, 
+        "3": {
+            "boardpoint": "HEL", 
+            "departuretime": "20090311T114000", 
+            "offpoint": "POR", 
+            "arrivaltime": "20090311T122500"
+        }, 
+        "2": {
+            "boardpoint": "POR", 
+            "departuretime": "20090311T060500", 
+            "offpoint": "HEL", 
+            "arrivaltime": "20090311T065000"
+        }, 
+        "4": {
+            "boardpoint": "HEL", 
+            "departuretime": "20090311T073500", 
+            "offpoint": "RIX", 
+            "arrivaltime": "20090311T083000"
+        }
+    }, 
+    "operatingcost": {
+        "1": {
+            "B757": 2113, 
+            "A320": 1693
+        }, 
+        "3": {
+            "B757": 2377, 
+            "A320": 1904
+        }, 
+        "2": {
+            "B757": 2377, 
+            "A320": 1904
+        }, 
+        "4": {
+            "B757": 2904, 
+            "A320": 2327
+        }
+    }, 
+    "instance": "MDFAM", 
+    "groups": {
+        "1": [
+            "1", 
+            "2"
+        ], 
+        "3": [
+            "5"
+        ], 
+        "2": [
+            "3", 
+            "4"
+        ], 
+        "4": [
+            "2", 
+            "4", 
+            "6"
+        ]
+    }, 
+    "demand": {
+        "1": {
+            "max": 422, 
+            "min": 422
+        }, 
+        "3": {
+            "max": 495, 
+            "min": 495
+        }, 
+        "2": {
+            "max": 368, 
+            "min": 368
+        }, 
+        "4": {
+            "max": 409, 
+            "min": 409
+        }
+    }, 
+    "fleet": {
+        "B757": {
+            "capacity": {
+                "ECO": 227, 
+                "BUS": 0, 
+                "FIR": 0
+            }, 
+            "numberofaircraft": 7
+        }, 
+        "A320": {
+            "capacity": {
+                "ECO": 159, 
+                "BUS": 0, 
+                "FIR": 0
+            }, 
+            "numberofaircraft": 12
+        }
+    }
+}

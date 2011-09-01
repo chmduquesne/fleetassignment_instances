@@ -1,0 +1,55 @@
+{
+    "instance": "FAM",
+    "assignmentcost": {
+        "1": {
+            "B757": 17424.774289099525,
+            "A320": 22344.26481042654
+        },
+        "3": {
+            "B757": 23482.0,
+            "A320": 28364.0
+        },
+        "2": {
+            "B757": 15089.989130434784,
+            "A320": 20748.07608695652
+        },
+        "4": {
+            "B757": 21044.482885085574,
+            "A320": 27245.24572127139
+        }
+    },
+    "network": {
+        "1": {
+            "boardpoint": "POR",
+            "departuretime": "20090311T040000",
+            "offpoint": "HEL",
+            "arrivaltime": "20090311T044000"
+        },
+        "3": {
+            "boardpoint": "HEL",
+            "departuretime": "20090311T114000",
+            "offpoint": "POR",
+            "arrivaltime": "20090311T122500"
+        },
+        "2": {
+            "boardpoint": "POR",
+            "departuretime": "20090311T060500",
+            "offpoint": "HEL",
+            "arrivaltime": "20090311T065000"
+        },
+        "4": {
+            "boardpoint": "HEL",
+            "departuretime": "20090311T073500",
+            "offpoint": "RIX",
+            "arrivaltime": "20090311T083000"
+        }
+    },
+    "fleet": {
+        "B757": {
+            "numberofaircraft": 7
+        },
+        "A320": {
+            "numberofaircraft": 12
+        }
+    }
+}

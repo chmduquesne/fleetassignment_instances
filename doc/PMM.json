@@ -1,0 +1,91 @@
+{
+    "instance": "PMM",
+
+    "network":
+    {
+        "1":
+        {
+            "boardpoint": "POR",
+            "offpoint": "HEL",
+            "departuretime": "20090311T040000",
+            "arrivaltime": "20090311T044000"
+        },
+        "2":
+        {
+            "boardpoint": "POR",
+            "offpoint": "HEL",
+            "departuretime": "20090311T060500",
+            "arrivaltime": "20090311T065000"
+        },
+        "3":
+        {
+            "boardpoint": "HEL",
+            "offpoint": "POR",
+            "departuretime": "20090311T114000",
+            "arrivaltime": "20090311T122500"
+        },
+        "4":
+        {
+            "boardpoint": "HEL",
+            "offpoint": "RIX",
+            "departuretime": "20090311T073500",
+            "arrivaltime": "20090311T083000"
+        }
+    },
+
+    "cabins": [ "ECO", "BUS", "FIR" ],
+
+    "fleet":
+    {
+        "A320":
+        {
+            "numberofaircraft": 12,
+            "capacity": { "ECO": 159, "BUS": 0, "FIR": 0 }
+        },
+        "B757":
+        {
+            "numberofaircraft": 7,
+            "capacity": { "ECO": 227, "BUS": 0, "FIR": 0 }
+        }
+    },
+
+    "itineraries":
+    {
+        "1": [ { "cabin": "ECO", "leg": "1" } ],
+        "2": [ { "cabin": "ECO", "leg": "1" },
+               { "cabin": "ECO", "leg": "4" } ],
+        "3": [ { "cabin": "ECO", "leg": "2" } ],
+        "4": [ { "cabin": "ECO", "leg": "2" },
+               { "cabin": "ECO", "leg": "4" } ],
+        "5": [ { "cabin": "ECO", "leg": "3" } ],
+        "6": [ { "cabin": "ECO", "leg": "4" } ]
+    },
+
+    "fare":
+    {
+        "1": 100.0,
+        "2": 137.5,
+        "3": 112.5,
+        "4": 150.0,
+        "5": 112.5,
+        "6": 137.5
+    },
+
+    "demand":
+    {
+        "1": 285,
+        "3": 208,
+        "2": 137,
+        "5": 495,
+        "4": 160,
+        "6": 112
+    },
+
+    "fleetassignment":
+    {
+        "1": "A320",
+        "2": "A320",
+        "3": "A320",
+        "4": "A320"
+    }
+}
