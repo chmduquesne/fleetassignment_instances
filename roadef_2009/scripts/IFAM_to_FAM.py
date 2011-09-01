@@ -2,17 +2,32 @@
 """
 This program turns an IFAM instance into a FAM instance.
 
-A rough estimation of the spill cost for assigning the model m to the leg
-l is made using the following formula:
+USAGE:
 
-spillcost_{m, l} = max(0, D_l - C_m) * avgfare_l * kappa
+    ifam_to_fam [options] <ifam instance>
 
-D_l is the aggregated demand on l, C_m is the cumulated capacity of all
-the cabins on m, and avgfare_l is the average fare on l. Kappa is a
-dimensionless quantity experimentally determined by Timothy S. Kniker and
-is taken equals to 0.7.
+OPTIONS:
 
-The assignment cost is computed by summing operating cost and spill cost.
+    -h, --help:         Print this help text
+
+    Use "-" to read the ifam input instance from stdin
+
+HOW IT WORKS:
+
+    A rough estimation of the spill cost for assigning the model m to the
+    leg l is made using the following formula:
+
+    spillcost_{m, l} = max(0, D_l - C_m) * avgfare_l * kappa
+
+    D_l is the aggregated demand on l, C_m is the cumulated capacity of
+    all the cabins on m, and avgfare_l is the average fare on l. Kappa is
+    a dimensionless quantity experimentally determined by Timothy S.
+    Kniker and is taken equals to 0.7.
+
+    The assignment cost is computed by summing operating cost and spill
+    cost.
+
+    Even if provided, recapture rates are skipped.
 """
 import json
 import getopt
@@ -56,9 +71,9 @@ def modify(instance):
 
     return result
 
-if __name__ == "__main__":
+def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h", ["help"])
+        opts, args = getopt.gnu_getopt(sys.argv[1:], "h", ["help"])
     except getopt.GetoptError, err:
         print str(err)
         print __doc__
@@ -67,9 +82,12 @@ if __name__ == "__main__":
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             print __doc__
+            sys.exit()
 
     source = "".join(args)
-    assert source != "", "No source provided"
+    if not source:
+        print __doc__
+        sys.exit()
     if source == "-":
         stream = sys.stdin
     else:
@@ -79,3 +97,5 @@ if __name__ == "__main__":
         modifiedInstance = modify(instance)
         print json.dumps(modifiedInstance, indent = 4)
 
+if __name__ == "__main__":
+    main()
