@@ -36,6 +36,16 @@ def to_datetime(start_datetime, text_delta):
 
 def get_network(path):
     network = {}
+    bus_leg_ids_to_exclude = []
+    with open(os.path.join(path, "rotations.csv")) as f:
+        csvreader = csv.reader(f, delimiter=' ')
+        for row in csvreader:
+            try:
+                id, date, aircraft = row[:3]
+                if aircraft.startswith("TranspCom"):
+                    bus_leg_ids_to_exclude.append(id)
+            except ValueError:
+                pass
     with open(os.path.join(path, "config.csv")) as f:
         csvreader = csv.reader(f, delimiter=' ')
         header = csvreader.next()
@@ -45,14 +55,16 @@ def get_network(path):
         for row in csvreader:
             try:
                 id, boardpoint, offpoint, dep_time, arr_time, prec_flight = row
-                network[id] = {
-                        "boardpoint": boardpoint,
-                        "offpoint": offpoint,
-                        "departuretime": to_datetime(start_date,
-                            dep_time).isoformat(),
-                        "arrivaltime": to_datetime(start_date,
-                            arr_time).isoformat()
-                        }
+                if id not in bus_leg_ids_to_exclude:
+                    assert network.get(id) == None, "must only add new flights"
+                    network[id] = {
+                            "boardpoint": boardpoint,
+                            "offpoint": offpoint,
+                            "departuretime": to_datetime(start_date,
+                                dep_time).isoformat(),
+                            "arrivaltime": to_datetime(start_date,
+                                arr_time).isoformat()
+                            }
             except ValueError:
                 pass
     return network
