@@ -24,63 +24,61 @@ except ImportError:
     import json
 
 
-def to_datetime(start_datetime, text_delta):
+def isoformat(date, hour):
+    refdate = dateutil.parser.parse(date)
     try:
-        hh_mm, d = text_delta.split("+")
+        hh_mm, d = hour.split("+")
     except ValueError:
-        hh_mm = text_delta
+        hh_mm = hour
         d = "0"
     hh, mm = hh_mm.split(":")
     delta = datetime.timedelta(days=int(d), hours=int(hh), minutes=int(mm))
-    return start_datetime + delta
+    return (refdate + delta).isoformat()
 
-def get_network(path):
-    network = {}
-    bus_leg_ids_to_exclude = []
-    with open(os.path.join(path, "rotations.csv")) as f:
-        csvreader = csv.reader(f, delimiter=' ')
-        for row in csvreader:
-            try:
-                id, date, aircraft = row[:3]
-                if aircraft.startswith("TranspCom"):
-                    bus_leg_ids_to_exclude.append(id)
-            except ValueError:
-                pass
-    with open(os.path.join(path, "config.csv")) as f:
-        csvreader = csv.reader(f, delimiter=' ')
-        header = csvreader.next()
-        start_date = dateutil.parser.parse(header[0])
+def get_network_fleetassignment(path):
+    # 1) get generic flight legs
+    flights = {}
     with open(os.path.join(path, "flights.csv")) as f:
         csvreader = csv.reader(f, delimiter=' ')
         for row in csvreader:
-            try:
-                id, boardpoint, offpoint, dep_time, arr_time, prec_flight = row
-                if id not in bus_leg_ids_to_exclude:
-                    assert network.get(id) == None, "must only add new flights"
-                    network[id] = {
-                            "boardpoint": boardpoint,
-                            "offpoint": offpoint,
-                            "departuretime": to_datetime(start_date,
-                                dep_time).isoformat(),
-                            "arrivaltime": to_datetime(start_date,
-                                arr_time).isoformat()
-                            }
-            except ValueError:
-                pass
-    return network
+            if len(row) > 1:
+                id, boardpoint, offpoint, dep_time, arr_time, prec_flight = row[:6]
+                flights[id] = {
+                        "boardpoint": boardpoint,
+                        "offpoint": offpoint,
+                        "departuretime": dep_time,
+                        "arrivaltime": arr_time
+                        }
+    network = {}
+    fleetassignment = {}
+    # 2) differentiate the real legs per day
+    with open(os.path.join(path, "rotations.csv")) as f:
+        csvreader = csv.reader(f, delimiter=' ')
+        for row in csvreader:
+            if len(row) > 1:
+                id, date, aircraft = row[:3]
+                if not aircraft.startswith("TranspCom"):
+                    leg = dict(flights[id])
+                    leg["departuretime"] = isoformat(date,
+                            leg["departuretime"])
+                    leg["arrivaltime"] = isoformat(date,
+                            leg["arrivaltime"])
+                    network["_".join([id, date])] = leg
+                    fleetassignment["_".join([id, date])] = aircraft
+    return (network, fleetassignment)
 
 def get_fleet(path):
     fleet = {}
     with open(os.path.join(path, "aircraft.csv")) as f:
         csvreader = csv.reader(f, delimiter=' ')
         for row in csvreader:
-            try:
+            if len(row) > 1:
                 id, model, family, config, dist, cost_h = row[:6]
                 try:
                     fleet[model + config]["numberofaircraft"] += 1
                 except KeyError:
                     fir, bus, eco = config.split("/")
-                    if int(fir)>=0 and int(bus) >=0 and int(eco)>=0:
+                    if not id.startswith("TranspCom"):
                         fleet[model + config] = {
                                 "numberofaircraft": 1,
                                 "capacity": {
@@ -89,8 +87,6 @@ def get_fleet(path):
                                     "F": int(fir)
                                     },
                                 "hourly_opcost": float(cost_h)}
-            except ValueError:
-                pass
     return fleet
 
 def get_operatingcosts(instance):
@@ -108,7 +104,7 @@ def get_operatingcosts(instance):
                     )
     return operatingcost
 
-def get_itineraries_fares_groups_demands(path):
+def get_itinerary_fares_demands(path):
     itineraries = {}
     fares = {}
     demands = {}
@@ -116,11 +112,15 @@ def get_itineraries_fares_groups_demands(path):
         csvreader = csv.reader(f, delimiter=' ')
         for row in csvreader:
             if len(row) > 1:
-                nblegs = (len(row) - 5)/3
+                # the leg-cabins are after the 4 first fields
+                nblegs = (len(row) - 4)/3
                 id = row[0]
                 itinerary = []
                 for i in range(nblegs):
-                    itinerary.append({"cabin": row[3*i + 6], "leg": row[3*i + 4]})
+                    itinerary.append({
+                        "leg": "_".join([row[4 + 3*i], row[4 + (3*i + 1)]]),
+                        "cabin": row[4 + (3*i + 2)],
+                        })
                 itineraries[id] = itinerary
                 fares[id] = float(row[2])
                 demands[id] = int(row[3])
@@ -153,12 +153,13 @@ if __name__ == "__main__":
     instance = {}
 
     instance["instance"] = "IFAM"
-    instance["network"] = get_network(path)
+    instance["network"], instance["fleetassignment"] = \
+            get_network_fleetassignment(path)
     instance["cabins"]= ["E", "B", "F"]
     instance["fleet"] = get_fleet(path)
     instance["operatingcost"] = get_operatingcosts(instance)
     instance["itineraries"], instance["fare"], instance["demand"] = \
-            get_itineraries_fares_groups_demands(path)
+            get_itinerary_fares_demands(path)
 
     clean_hourlyopcosts(instance)
 
